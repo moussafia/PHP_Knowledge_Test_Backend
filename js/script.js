@@ -1,19 +1,32 @@
-//====================== import data.js =========================
-import { quizz } from "./data.js";
 let footer = document.getElementById("page-resultat");
 let header = document.getElementById("page-quiz");
 //====================== get elementfrom =========================
 let score = 0;
 let index = 0;
 let time = 6;
-//==============show function=======================
-showQuizz(index);
+//====================== import data.js =========================
+let quizz = [];
+function getQuestion() {
+  let aj = new XMLHttpRequest();
+  aj.onreadystatechange = function () {
+    if (this.readyState === 4 && this.status === 200) {
+      quizz = JSON.parse(this.responseText);
+      //==============show function=======================
+      showQuizz(index);
+    }
+  };
+  aj.open(
+    "POST",
+    "http://localhost/PHP_Knowledge_Test_Backend/php-script/data.php",
+    true
+  );
+  aj.send();
+}
+getQuestion();
 
 //==================== display quizz in html file =======================
 function showQuizz(index) {
   var randomQuestion = quizz.sort(() => Math.random() - 0.5);
-  var arrAnswrCount = [0, 1, 2, 3];
-  var arrAnswrRandom = arrAnswrCount.sort(() => Math.random() - 0.5);
 
   // ======================declaration variable vide================
   var boxQuestion = document.querySelector(".question strong");
@@ -42,7 +55,6 @@ function showQuizz(index) {
   // =================== Appel function display==========================
   footer.style.display = "none";
   next.style.display = "none";
-
   display(index);
   next.onclick = () => {
     index++;
@@ -70,11 +82,19 @@ function showQuizz(index) {
   };
 
   function display(index) {
+    console.log(quizz);
+    var arrAnswrCount = [
+      randomQuestion[index].choix1,
+      randomQuestion[index].choix2,
+      randomQuestion[index].choix3,
+      randomQuestion[index].choix4,
+    ];
+    var arrAnswrRandom = arrAnswrCount.sort(() => Math.random() - 0.5);
     boxQuestion.innerHTML = randomQuestion[index].question;
-    answer1.innerHTML = randomQuestion[index].answers[arrAnswrRandom[0]];
-    answer2.innerHTML = randomQuestion[index].answers[arrAnswrRandom[1]];
-    answer3.innerHTML = randomQuestion[index].answers[arrAnswrRandom[2]];
-    answer4.innerHTML = randomQuestion[index].answers[arrAnswrRandom[3]];
+    answer1.innerHTML = arrAnswrRandom[0];
+    answer2.innerHTML = arrAnswrRandom[1];
+    answer3.innerHTML = arrAnswrRandom[2];
+    answer4.innerHTML = arrAnswrRandom[3];
     document.querySelector(".lesNotes span").innerHTML = score;
     document.querySelector("#progress-question span").innerHTML = `${
       1 + index + " of " + randomQuestion.length + " Question"
@@ -89,7 +109,6 @@ function showQuizz(index) {
     for (let j = 0; j < buttonAnswers.length; j++) {
       answerUser(j, buttonAnswers, asws, randomQuestion, index, next);
     }
-    timeAnswer(buttonAnswers, asws, index,time);
   }
 }
 
@@ -110,7 +129,7 @@ function progressBarTiming(array) {
 function answerUser(j, buttonAnswers, asws, randomQuestion, index, next) {
   buttonAnswers[j].onclick = () => {
     removeClassesAndOpacity(buttonAnswers);
-    if (asws[j].localeCompare(randomQuestion[index].trueAnswer[0]) == 0) {
+    if (asws[j].localeCompare(randomQuestion[index].correctAnswer) == 0) {
       buttonAnswers[j].classList.add("correct-answer");
       for (let i = 0; i < buttonAnswers.length; i++) {
         buttonAnswers[i].style.pointerEvents = "none";
@@ -125,7 +144,7 @@ function answerUser(j, buttonAnswers, asws, randomQuestion, index, next) {
       for (let i = 0; i < buttonAnswers.length; i++) {
         buttonAnswers[i].style.pointerEvents = "none";
         if (i != j) {
-          if (asws[i].localeCompare(randomQuestion[index].trueAnswer[0]) == 0) {
+          if (asws[i].localeCompare(randomQuestion[index].correctAnswer) == 0) {
             buttonAnswers[i].classList.add("correct-answer");
           } else buttonAnswers[i].style.opacity = "0";
         }
@@ -135,24 +154,4 @@ function answerUser(j, buttonAnswers, asws, randomQuestion, index, next) {
   };
 }
 
-let timeDecrement;
-function timeAnswer(buttonAnswers, asws, index, t) {
-  function timer() {
-    t--;
-    if (t <= 0) {
-      clearInterval(timeDecrement);
-      removeClassesAndOpacity(buttonAnswers);
-      for (let j = 0; j < buttonAnswers.length; j++)
-        if (asws[j].localeCompare(randomQuestion[index].trueAnswer[0]) == 0) {
-          buttonAnswers[j].classList.add("correct-answer");
-          for (let i = 0; i < buttonAnswers.length; i++) {
-            buttonAnswers[i].style.pointerEvents = 'none';
-            if (i != j) {
-              buttonAnswers[j].classList.add("incorrect-answer");
-            }
-          }
-        }
-    }
-  }
-  timeDecrement = setInterval(timer, 1000);console.log(time)
-}
+

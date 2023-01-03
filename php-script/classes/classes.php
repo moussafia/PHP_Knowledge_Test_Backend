@@ -110,19 +110,5 @@ class Qa
     $this->choix4 = $choix4;
   }
 
-  public function readQuestion()
-  {
-    try {
-      $database = new Db();
-      $conn = $database->connect_pdo();
-      $req = "SELECT * FROM `qa`";
-      $result = $conn->query($req);
-      return $result;
-    } catch (PDOException $exp) {
-      return $exp->getMessage();
-    }
-  }
-
-
 }
 ?>

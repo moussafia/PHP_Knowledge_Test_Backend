@@ -10,13 +10,8 @@ function insertUser(){
     $user = new Player();
     $user->setname($_POST['input_name']);
     $user->createUSER();
+    header("location: quiz.php");
 }
 
-function fetchQA(){
-    $QA = new Qa();
-    $QA->readQuestion();
-    
-
-}
 
 ?>

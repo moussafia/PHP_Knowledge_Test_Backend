@@ -25,7 +25,7 @@
                 <span></span>
             </div>
             <div>
-                <a href="index.html"><button type="submit" class="close">&#9747</button></a>
+                <a href="index.php"><button type="submit" class="close">&#9747</button></a>
             </div>
         </nav>
         <!--main-->
@@ -90,7 +90,7 @@
                 </div>
             </div>
             <div class="div-btn-restart">
-                <a href="index.html"><button>restart quizz</button></a>
+                <a href="index.php"><button>restart quizz</button></a>
             </div>
         </div>
     </footer>
