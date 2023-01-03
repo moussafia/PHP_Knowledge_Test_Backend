@@ -1,17 +1,14 @@
 let footer = document.getElementById("page-resultat");
 let header = document.getElementById("page-quiz");
-//====================== get elementfrom =========================
 let score = 0;
 let index = 0;
 let time = 6;
-//====================== import data.js =========================
 let quizz = [];
 function getQuestion() {
   let aj = new XMLHttpRequest();
   aj.onreadystatechange = function () {
     if (this.readyState === 4 && this.status === 200) {
       quizz = JSON.parse(this.responseText);
-      //==============show function=======================
       showQuizz(index);
     }
   };
@@ -24,18 +21,13 @@ function getQuestion() {
 }
 getQuestion();
 
-//==================== display quizz in html file =======================
 function showQuizz(index) {
   var randomQuestion = quizz.sort(() => Math.random() - 0.5);
-
-  // ======================declaration variable vide================
   var boxQuestion = document.querySelector(".question strong");
   var answer1 = document.querySelector(".answer1 strong");
   var answer2 = document.querySelector(".answer2 strong");
   var answer3 = document.querySelector(".answer3 strong");
   var answer4 = document.querySelector(".answer4 strong");
-
-  // ======================declaration button answer================
   var next = document.getElementById("btn-skip");
   var btnAnswer1 = document.querySelector(".answer1");
   var btnAnswer2 = document.querySelector(".answer2");
@@ -44,15 +36,11 @@ function showQuizz(index) {
   var buttonAnswers = [btnAnswer1, btnAnswer2, btnAnswer3, btnAnswer4];
 
   const bar = document.querySelector(".round-time-bar");
-
-  // ==========================initialisation des variables=================
   boxQuestion.innerHTML = "";
   answer1.innerHTML = "";
   answer2.innerHTML = "";
   answer3.innerHTML = "";
   answer4.innerHTML = "";
-
-  // =================== Appel function display==========================
   footer.style.display = "none";
   next.style.display = "none";
   display(index);
@@ -99,7 +87,6 @@ function showQuizz(index) {
     document.querySelector("#progress-question span").innerHTML = `${
       1 + index + " of " + randomQuestion.length + " Question"
     }`;
-    // ======================declaration variable rempli================
     var asw1 = document.querySelector(".answer1 strong").textContent;
     var asw2 = document.querySelector(".answer2 strong").textContent;
     var asw3 = document.querySelector(".answer3 strong").textContent;
@@ -153,5 +140,3 @@ function answerUser(j, buttonAnswers, asws, randomQuestion, index, next) {
     next.style.display = "block";
   };
 }
-
-
